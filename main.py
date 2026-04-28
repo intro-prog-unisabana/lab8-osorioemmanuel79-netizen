@@ -4,14 +4,13 @@
 import sys
 from todo_manager import read_todo_file, write_todo_file
 
-def main():
-    try:
-        if len(sys.argv) < 2:
-            raise IndexError("Insufficient arguments provided!")
+try:
+    
+    if len(sys.argv) < 2:
+        raise IndexError("Insufficient arguments provided!")
 
-        # HELP
-        if sys.argv[1] == "--help":
-            print("""Usage: python main.py <file_path> <command> [arguments]...
+    if sys.argv[1] == "--help":
+        print("""Usage: python main.py <file_path> <command> [arguments]...
 
 Commands:
   add "task"    - Add a task to the list.
@@ -23,51 +22,58 @@ Examples:
   python main.py tasks.txt remove "Do laundry"
   python main.py tasks.txt view
   python main.py tasks.txt add "Call mom" remove "Take out trash" view""")
-            return
+        sys.exit()
 
-        file_path = sys.argv[1]
-        tasks = read_todo_file(file_path)
+    file_path = sys.argv[1]
 
-        i = 2  # empezar desde el comando
+    
+    tasks = read_todo_file(file_path)
 
-        while i < len(sys.argv):
-            command = sys.argv[i]
+    i = 2
+    modified = False  
 
-            if command == "add":
-                if i + 1 >= len(sys.argv):
-                    raise IndexError('Task description required for "add".')
+    while i < len(sys.argv):
+        command = sys.argv[i]
 
-                task = sys.argv[i + 1]
-                tasks.append(task)
-                print(f'Task "{task}" added.')
-                i += 2
+        
+        if command == "add":
+            if i + 1 >= len(sys.argv):
+                raise IndexError('Task description required for "add".')
 
-            elif command == "remove":
-                if i + 1 >= len(sys.argv):
-                    raise IndexError('Task description required for "remove".')
+            task = sys.argv[i + 1]
+            tasks.append(task)
+            print(f'Task "{task}" added.')
+            modified = True
+            i += 2
 
-                task = sys.argv[i + 1]
-                try:
-                    tasks.remove(task)
-                    print(f'Task "{task}" removed.')
-                except ValueError:
-                    print(f'Task "{task}" not found.')
-                i += 2
+        elif command == "remove":
+            if i + 1 >= len(sys.argv):
+                raise IndexError('Task description required for "remove".')
 
-            elif command == "view":
-                print("Tasks:")
-                for task in tasks:
-                    print(task)
-                i += 1
+            task = sys.argv[i + 1]
+            try:
+                tasks.remove(task)
+                print(f'Task "{task}" removed.')
+                modified = True
+            except ValueError:
+                print(f'Task "{task}" not found.')
+            i += 2
 
-            else:
-                raise ValueError("Command not found!")
+        elif command == "view":
+            print("Tasks:")
+            for task in tasks:
+                print(task)
+            i += 1
 
-        # Guardar SOLO una vez
+        else:
+            raise ValueError("Command not found!")
+
+    if modified:
         write_todo_file(file_path, tasks)
 
-    except (IndexError, ValueError) as e:
-        print(e)
-
-if _name_ == "_main_":
-    main()
+except IndexError as e:
+    print(e)
+except ValueError as e:
+    print(e)
+if __name__=="_main_":
+    print
