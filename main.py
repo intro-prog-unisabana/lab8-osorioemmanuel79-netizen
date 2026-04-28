@@ -58,4 +58,4 @@ def main():
         print("Error: Something went wrong.")
 
 if __name__ == "__main__":
-    
+    main()
