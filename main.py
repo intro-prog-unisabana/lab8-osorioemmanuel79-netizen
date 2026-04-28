@@ -60,22 +60,18 @@ Examples:
             i += 2
 
         elif command == "view":
-            if not tasks:
-             write_todo_file(file_path, tasks)
-             print("No tasks found.")
-            else:
-                for idx, task in enumerate(tasks,1):
-                     print(f"{idx}. {task}")
+         print("Tasks:")
+for task in tasks:
+        print(task)
+        i += 1
 
-            i += 1
-
-        else:
-            raise ValueError("Command not found!")
+else:
+    raise ValueError("Command not found!")
 
     if modified:
         write_todo_file(file_path, tasks)
 
-except IndexError as e:
+    except IndexError as e:
     print(e)
-except ValueError as e:
+    except ValueError as e:
     print(e)
