@@ -1,7 +1,5 @@
 """Laboratorio 8 - Módulo de persistencia para lista de tareas."""
 
-
-
 def read_todo_file(file_path):
     """Reads tasks from a file. Returns a list of tasks."""
     try:
