@@ -60,9 +60,13 @@ Examples:
             i += 2
 
         elif command == "view":
-            print("Tasks:")
-            for task in tasks:
-                print(task)
+            if not tasks:
+             write_todo_file(file_path, tasks)
+             print("No tasks found.")
+            else:
+                for idx, task in enumerate(tasks,1):
+                     print(f"{idx}. {task}")
+
             i += 1
 
         else:
