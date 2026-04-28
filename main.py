@@ -1,74 +1,60 @@
 """Laboratorio 8 - CLI del gestor de tareas."""
 
 # TODO: Implementar CLI según README.md
-
+# main.py
 import sys
 from todo_manager import read_todo_file, write_todo_file
 
 def main():
     try:
-        if len(sys.argv) < 2:
-            raise IndexError("Insufficient arguments provided!")
+        if len(sys.argv) < 3:
+            raise ValueError
 
-        # HELP
-        if sys.argv[1] == "--help":
-            print("""Usage: python main.py <file_path> <command> [arguments]...
+        filename = sys.argv[1]
+        command = sys.argv[2]
 
-Commands:
-  add "task"    - Add a task to the list.
-  remove "task" - Remove a task from the list.
-  view          - Display all tasks.
+        tasks = read_todo_file(filename)
 
-Examples:
-  python main.py tasks.txt add "Buy groceries"
-  python main.py tasks.txt remove "Do laundry"
-  python main.py tasks.txt view
-  python main.py tasks.txt add "Call mom" remove "Take out trash" view""")
-            return
-
-        file_path = sys.argv[1]
-        tasks = read_todo_file(file_path)
-
-        i = 2  # empezar desde el comando
-
-        while i < len(sys.argv):
-            command = sys.argv[i]
-
-            if command == "add":
-                if i + 1 >= len(sys.argv):
-                    raise IndexError('Task description required for "add".')
-
-                task = sys.argv[i + 1]
-                tasks.append(task)
-                print(f'Task "{task}" added.')
-                i += 2
-
-            elif command == "remove":
-                if i + 1 >= len(sys.argv):
-                    raise IndexError('Task description required for "remove".')
-
-                task = sys.argv[i + 1]
-                try:
-                    tasks.remove(task)
-                    print(f'Task "{task}" removed.')
-                except ValueError:
-                    print(f'Task "{task}" not found.')
-                i += 2
-
-            elif command == "view":
-                print("Tasks:")
-                for task in tasks:
-                    print(task)
-                i += 1
-
+        # VER TAREAS
+        if command == "view":
+            if not tasks:
+                print("No tasks found.")
             else:
-                raise ValueError("Command not found!")
+                for i, task in enumerate(tasks, 1):
+                    print(f"{i}. {task}")
 
-        # Guardar SOLO una vez
-        write_todo_file(file_path, tasks)
+        # AGREGAR TAREA
+        elif command == "add":
+            if len(sys.argv) < 4:
+                raise ValueError
 
-    except (IndexError, ValueError) as e:
-        print(e)
+            new_task = " ".join(sys.argv[3:])
+            tasks.append(new_task)
+            write_todo_file(filename, tasks)
+            print("Task added.")
 
-if _name_ == "_main_":
+        # ELIMINAR TAREA
+        elif command == "remove":
+            if len(sys.argv) < 4:
+                raise ValueError
+
+            index = int(sys.argv[3]) - 1
+
+            if index < 0 or index >= len(tasks):
+                print("Error: Invalid task number.")
+            else:
+                removed = tasks.pop(index)
+                write_todo_file(filename, tasks)
+                print(f"Removed task: {removed}")
+
+        else:
+            print("Error: Invalid command.")
+
+    except ValueError:
+        print("Error: Invalid input.")
+
+    except Exception:
+        print("Error: Something went wrong.")
+
+if __name__ == "__main__":
     main()
