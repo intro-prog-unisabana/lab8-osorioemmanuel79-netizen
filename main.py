@@ -75,5 +75,3 @@ except IndexError as e:
     print(e)
 except ValueError as e:
     print(e)
-if __name__=="_main_":
-    print
